@@ -5,7 +5,8 @@ import { gray } from '../../styles/colors'
 const CELL_SIZE = 45
 
 export const MainContainer = styled.div`
-  margin-top: 16px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 `
 export const ButtonsContainer = styled.div`
   display: flex;

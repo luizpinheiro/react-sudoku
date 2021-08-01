@@ -10,6 +10,8 @@ import MistakesCounter from '../MistakesCounter'
 import EndGameOverlay from '../EndGameOverlay'
 import reducerFunction, { initialState } from './reducer'
 import { MISTAKES_ALLOWED } from '../../config'
+import Signature from '../Signature'
+import Credits from '../Credits'
 
 const MainBoard = () => {
   const [state, dispatch] = useReducer(reducerFunction, initialState)
@@ -80,6 +82,8 @@ const MainBoard = () => {
         gameStatus={state.gameStatus}
         onPlayAgain={handlePlayAgain}
       />
+      <Signature />
+      <Credits />
     </S.MainContainer>
   )
 }
