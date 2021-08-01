@@ -75,4 +75,4 @@ const Grid = ({
   return <S.MainContainer>{cells}</S.MainContainer>
 }
 
-export default Grid
+export default React.memo(Grid)

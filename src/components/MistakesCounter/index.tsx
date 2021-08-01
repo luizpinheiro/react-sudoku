@@ -12,4 +12,4 @@ const MistakesCounter = ({ mistakes, maximumMistakes }: Props) => (
   </S.MainContainer>
 )
 
-export default MistakesCounter
+export default React.memo(MistakesCounter)

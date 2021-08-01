@@ -88,4 +88,4 @@ const MainBoard = () => {
   )
 }
 
-export default MainBoard
+export default React.memo(MainBoard)

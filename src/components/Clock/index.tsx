@@ -31,4 +31,4 @@ const Clock = ({ gameStatus, seconds, onClockTick }: Props) => {
   )
 }
 
-export default Clock
+export default React.memo(Clock)
