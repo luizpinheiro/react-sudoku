@@ -16,6 +16,7 @@ export enum Actions {
   RESTART,
   CLOCK_TICK,
   SELECT,
+  ANNOTATE,
 }
 
 export type Action = {

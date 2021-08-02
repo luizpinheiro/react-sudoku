@@ -2,6 +2,7 @@ import { GameStatus } from '../../enums'
 import {
   Action,
   Actions,
+  AnnotationsMatrix,
   Coordinate,
   ErrorsMatrix,
   NumbersMatrix,
@@ -21,6 +22,7 @@ type State = {
   prefilledMatrix: NumbersMatrix
   fillMatrix: NumbersMatrix
   errorsMatrix: ErrorsMatrix
+  annotationsMatrix: AnnotationsMatrix
   mistakesCounter: number
   selectedPosition: Coordinate | null
   filledPositions: number
@@ -38,6 +40,7 @@ const generateInitialState = (): State => {
     mistakesCounter: 0,
     errorsMatrix: generateMatrix<boolean>(false),
     filledPositions: 0,
+    annotationsMatrix: generateMatrix<number[]>([]),
   }
 }
 
@@ -58,6 +61,37 @@ const reducerFunction = (state: State, action: Action): State => {
       }
     case Actions.RESTART:
       return generateInitialState()
+    case Actions.ANNOTATE: {
+      if (!action.position) return state
+      if (!action.value) return state
+      if (state.fillMatrix[action.position.y][action.position.x] !== null)
+        return state
+      const annotationsMatrix = cloneMatrix<number[]>(state.annotationsMatrix)
+      const index = annotationsMatrix[action.position.y][
+        action.position.x
+      ].indexOf(action.value)
+
+      if (index >= 0) {
+        annotationsMatrix[action.position.y][action.position.x] = [
+          ...annotationsMatrix[action.position.y][action.position.x].slice(
+            0,
+            index,
+          ),
+          ...annotationsMatrix[action.position.y][action.position.x].slice(
+            index + 1,
+          ),
+        ]
+      } else {
+        annotationsMatrix[action.position.y][action.position.x] = [
+          ...annotationsMatrix[action.position.y][action.position.x],
+          action.value,
+        ].sort()
+      }
+      return {
+        ...state,
+        annotationsMatrix,
+      }
+    }
     case Actions.ERASE: {
       if (!action.position) return state
       if (state.prefilledMatrix[action.position.y][action.position.x] !== null)
@@ -75,6 +109,11 @@ const reducerFunction = (state: State, action: Action): State => {
         ...state,
         fillMatrix,
         errorsMatrix,
+        filledPositions: state.errorsMatrix[action.position.y][
+          action.position.x
+        ]
+          ? state.filledPositions
+          : state.filledPositions - 1,
       }
     }
     case Actions.INPUT: {
@@ -93,6 +132,7 @@ const reducerFunction = (state: State, action: Action): State => {
 
       const fillMatrix = cloneMatrix<number | null>(state.fillMatrix)
       const errorsMatrix = cloneMatrix<boolean>(state.errorsMatrix)
+      const annotationsMatrix = cloneMatrix<number[]>(state.annotationsMatrix)
 
       fillMatrix[action.position.y][action.position.x] = action.value
       errorsMatrix[action.position.y][action.position.x] =
@@ -106,6 +146,10 @@ const reducerFunction = (state: State, action: Action): State => {
       if (mistake && state.mistakesCounter + 1 === Configs.MISTAKES_ALLOWED)
         gameStatus = GameStatus.LOST
 
+      if (annotationsMatrix[action.position.y][action.position.x].length) {
+        annotationsMatrix[action.position.y][action.position.x] = []
+      }
+
       return {
         ...state,
         fillMatrix,
@@ -117,6 +161,7 @@ const reducerFunction = (state: State, action: Action): State => {
         filledPositions: mistake
           ? state.filledPositions
           : state.filledPositions + 1,
+        annotationsMatrix,
       }
     }
     default:

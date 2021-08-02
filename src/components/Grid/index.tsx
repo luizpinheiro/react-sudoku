@@ -1,7 +1,12 @@
 import React, { useMemo } from 'react'
 
 import * as S from './styles'
-import { Coordinate, ErrorsMatrix, NumbersMatrix } from '../../types'
+import {
+  AnnotationsMatrix,
+  Coordinate,
+  ErrorsMatrix,
+  NumbersMatrix,
+} from '../../types'
 import {
   generateMatrix,
   sameBlockCoordinates,
@@ -15,6 +20,7 @@ type Props = {
   initialCellValues: NumbersMatrix
   filledCellValues: NumbersMatrix
   errorsMatrix: ErrorsMatrix
+  annotationsMatrix: AnnotationsMatrix
 }
 
 const Grid = ({
@@ -23,6 +29,7 @@ const Grid = ({
   initialCellValues,
   filledCellValues,
   errorsMatrix,
+  annotationsMatrix,
 }: Props) => {
   const highlightedCells: boolean[][] = useMemo(() => {
     const cells = generateMatrix<boolean>(false)
@@ -58,6 +65,9 @@ const Grid = ({
             error={errorsMatrix[y][x]}
           >
             {filledCellValues[y][x] || initialCellValues[y][x]}
+            {annotationsMatrix[y][x].map((value) => (
+              <S.Annotation key={value}>{value}</S.Annotation>
+            ))}
           </S.Cell>,
         )
       }
@@ -70,6 +80,7 @@ const Grid = ({
     selectedCell,
     highlightedCells,
     onSelect,
+    annotationsMatrix,
   ])
 
   return <S.MainContainer>{cells}</S.MainContainer>

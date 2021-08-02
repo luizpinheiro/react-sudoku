@@ -49,6 +49,17 @@ const MainBoard = () => {
     })
   }, [])
 
+  const handleAnnotation = useCallback(
+    (position: Coordinate, value: number) => {
+      dispatch({
+        type: Actions.ANNOTATE,
+        position,
+        value,
+      })
+    },
+    [dispatch],
+  )
+
   return (
     <S.MainContainer>
       <Header />
@@ -69,6 +80,7 @@ const MainBoard = () => {
         initialCellValues={state.prefilledMatrix}
         filledCellValues={state.fillMatrix}
         errorsMatrix={state.errorsMatrix}
+        annotationsMatrix={state.annotationsMatrix}
       />
       <Keyboard
         selectedPosition={state.selectedPosition}
@@ -76,6 +88,7 @@ const MainBoard = () => {
         filledCells={state.fillMatrix}
         onClick={handleInput}
         onErase={handleErase}
+        onAnnotate={handleAnnotation}
       />
       <EndGameOverlay
         seconds={state.seconds}

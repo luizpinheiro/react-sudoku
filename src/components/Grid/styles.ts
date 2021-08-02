@@ -27,7 +27,10 @@ export const Cell = styled.div<{
   text-align: center;
   color: #7192d9;
   cursor: pointer;
-
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   ${(props) =>
     props.highlighted &&
     `
@@ -53,4 +56,12 @@ export const Cell = styled.div<{
   &:nth-child(n + 46):nth-child(-n + 54) {
     border-bottom: 1px solid #919191;
   }
+`
+
+export const Annotation = styled.div`
+  font-size: 10px;
+  width: 14px;
+  height: 13px;
+  text-align: center;
+  line-height: 13px;
 `

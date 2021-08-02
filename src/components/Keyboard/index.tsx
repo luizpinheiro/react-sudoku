@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import * as S from './styles'
 import { Coordinate, NumbersMatrix } from '../../types'
@@ -14,6 +14,7 @@ type Props = {
   selectedPosition: Coordinate | null
   onClick: (position: Coordinate, value: number) => void
   onErase: (position: Coordinate) => void
+  onAnnotate: (position: Coordinate, value: number) => void
 }
 const Keyboard = ({
   prefilledCells,
@@ -21,12 +22,18 @@ const Keyboard = ({
   selectedPosition,
   onClick,
   onErase,
+  onAnnotate,
 }: Props) => {
+  const [annotationMode, setAnnotationMode] = useState<boolean>(false)
   const keys = useMemo(() => {
     const result = []
     for (let i = 1; i <= 9; i += 1) result.push(i)
     return result
   }, [selectedPosition, prefilledCells, filledCells])
+
+  const toggleAnnotationMode = () => {
+    setAnnotationMode((m) => !m)
+  }
 
   // const disabledKeys = useMemo<Record<number, boolean>>(() => {
   //   const result: Record<number, boolean> = {}
@@ -44,12 +51,25 @@ const Keyboard = ({
   //   }
   //   return result
   // }, [selectedPosition, filledCells, prefilledCells])
-  console.log(`selectedPosition: `, selectedPosition)
 
+  const handleClick = (position: Coordinate, value: number) => {
+    if (annotationMode) {
+      onAnnotate(position, value)
+    } else {
+      onClick(position, value)
+    }
+  }
   return (
     <S.MainContainer>
       <S.ButtonsContainer>
         <S.Button
+          onClick={toggleAnnotationMode}
+          annotationMode={annotationMode}
+        >
+          Annotation
+        </S.Button>
+        <S.Button
+          annotationMode={false}
           onClick={() => selectedPosition && onErase(selectedPosition)}
           disabled={
             !selectedPosition ||
@@ -68,10 +88,11 @@ const Keyboard = ({
               selectedPosition === null ||
               !!prefilledCells[selectedPosition.y][selectedPosition.x]
             }
+            annotation={annotationMode}
             onClick={() =>
               selectedPosition &&
               !prefilledCells[selectedPosition.y][selectedPosition.x] &&
-              onClick(selectedPosition, value)
+              handleClick(selectedPosition, value)
             }
           >
             {value}
