@@ -1,3 +1,7 @@
+/**
+ * Generates a random string of `length` length
+ * @param length
+ */
 export const randomStr = (length: number): string => {
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -9,5 +13,10 @@ export const randomStr = (length: number): string => {
   return result
 }
 
+/**
+ * Generates a random number from "min" to "max", including both.
+ * @param min
+ * @param max
+ */
 export const randomNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min

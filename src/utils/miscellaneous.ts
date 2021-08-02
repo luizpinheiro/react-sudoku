@@ -1,9 +1,22 @@
 import { Coordinate, NumbersMatrix } from '../types'
 import { randomNumber } from './random'
 
+/**
+ * Converts a coordinate object into it's plain representation.
+ * A plain representation of a coordinate is simply a "x,y" string.
+ *
+ * @param position
+ */
 export const plainCoordinate = (position: Coordinate): string =>
   `${position.x},${position.y}`
 
+/**
+ * Creates a new 9x9 matrix where the elements have the type T
+ * and initializes its values with the value provided to the
+ * parameter initialValue.
+ *
+ * @param initialValue
+ */
 export const generateMatrix = <T>(initialValue: T): T[][] => {
   const matrix: T[][] = []
   for (let y = 0; y < 9; y += 1) {
@@ -15,6 +28,12 @@ export const generateMatrix = <T>(initialValue: T): T[][] => {
   return matrix
 }
 
+/**
+ * Returns all coordinates that belongs to the same block (sudoku has 9 blocks)
+ * excluding the provided position itself.
+ *
+ * @param position
+ */
 export const sameBlockCoordinates = (position: Coordinate): Coordinate[] => {
   const coordinates: Coordinate[] = []
 
@@ -32,6 +51,12 @@ export const sameBlockCoordinates = (position: Coordinate): Coordinate[] => {
   return coordinates
 }
 
+/**
+ * Returns all coordinates that belongs to the same line (sudoku has 9 lines)
+ * excluding the provided position itself.
+ *
+ * @param position
+ */
 export const sameLineCoordinates = (position: Coordinate): Coordinate[] => {
   const coordinates: Coordinate[] = []
   for (let x = 0; x < position.x; x += 1) {
@@ -42,6 +67,13 @@ export const sameLineCoordinates = (position: Coordinate): Coordinate[] => {
   }
   return coordinates
 }
+
+/**
+ * Returns all coordinates that belongs to the same column (sudoku has 9 columns)
+ * excluding the provided position itself.
+ *
+ * @param position
+ */
 export const sameColumnCoordinates = (position: Coordinate): Coordinate[] => {
   const coordinates: Coordinate[] = []
   for (let y = 0; y < position.y; y += 1) {
@@ -53,6 +85,14 @@ export const sameColumnCoordinates = (position: Coordinate): Coordinate[] => {
   return coordinates
 }
 
+/**
+ * Checks if a given coordinate, when filled with a given value, would violate
+ * the sudoku rules for the given matrix of fills.
+ *
+ * @param coordinate
+ * @param value
+ * @param matrix
+ */
 export const validateCoordinateNumber = (
   coordinate: Coordinate,
   value: number,
@@ -88,13 +128,26 @@ export const validateCoordinateNumber = (
   return true
 }
 
-export const generateprefilledCells = (): NumbersMatrix => {
+/**
+ * Returns a new 9x9 matrix with all fields filled with random values. Worth notice
+ * that the values are randomized in a way that they respect sudoku rules, so we
+ * can create a new game from this pre-filled matrix by just hiding some cells.
+ */
+export const generatePreFilledCells = (): NumbersMatrix => {
   const matrix = generateMatrix<number | null>(null)
   const initialCoordinate: Coordinate = { x: 0, y: 0 }
   fillSequence(initialCoordinate, matrix)
   return matrix
 }
 
+/**
+ * Recursive algorithm that generates a valid solution for sudoku game.
+ * It starts by filling a position and checking if we can proceed to a final
+ * solution. If not, abort the branch and try a new value.
+ *
+ * @param coordinate
+ * @param matrix
+ */
 const fillSequence = (
   coordinate: Coordinate,
   matrix: NumbersMatrix,
@@ -114,6 +167,11 @@ const fillSequence = (
   return false
 }
 
+/**
+ * Returns the next in line coordinate.
+ *
+ * @param position
+ */
 const getNextCoordinate = (position: Coordinate): Coordinate | null => {
   if (position.x === 8 && position.y === 8) return null
 
@@ -122,6 +180,9 @@ const getNextCoordinate = (position: Coordinate): Coordinate | null => {
   return { x: position.x + 1, y: position.y }
 }
 
+/**
+ * Generates a random sequence of 9 elements, with values ranging from 1 to 9
+ */
 const generateRandomSequence = (): number[] => {
   const sequence: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
   for (let x = 0; x < 9; x += 1) {
@@ -134,6 +195,14 @@ const generateRandomSequence = (): number[] => {
   return sequence
 }
 
+/**
+ * Clear (fill with null) a matrix randomly. The number of cells that must
+ * be cleared is provided in the clearSize parameter. We try to create a
+ * counter position for a previous clear so we can have a symmetric clear
+ * process.
+ * @param matrix
+ * @param clearSize
+ */
 export const clearCells = (
   matrix: NumbersMatrix,
   clearSize = 16,
@@ -158,6 +227,10 @@ export const clearCells = (
   return resultMatrix
 }
 
+/**
+ * Clones a given matrix. Necessary when updating react states.
+ * @param matrix
+ */
 export const cloneMatrix = <T>(matrix: T[][]): T[][] => {
   const resultMatrix: T[][] = []
   for (let y = 0; y < 9; y += 1) {
@@ -169,6 +242,10 @@ export const cloneMatrix = <T>(matrix: T[][]): T[][] => {
   return resultMatrix
 }
 
+/**
+ * Creates a clock representation of seconds.
+ * @param seconds
+ */
 export const secondsToClock = (seconds: number): string => {
   const min = Math.floor(seconds / 60)
     .toString()

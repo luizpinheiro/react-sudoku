@@ -11,7 +11,7 @@ import {
   clearCells,
   cloneMatrix,
   generateMatrix,
-  generateprefilledCells,
+  generatePreFilledCells,
 } from '../../utils/miscellaneous'
 import * as Configs from '../../config'
 
@@ -28,8 +28,12 @@ type State = {
   filledPositions: number
 }
 
+/**
+ * We create a new game state from a function so we can use it
+ * when restarting the game.
+ */
 const generateInitialState = (): State => {
-  const completeResultMatrix = generateprefilledCells()
+  const completeResultMatrix = generatePreFilledCells()
   const prefilledMatrix = clearCells(
     completeResultMatrix,
     Configs.MAX_EMPTY_CELLS,
@@ -76,15 +80,10 @@ const reducerFunction = (state: State, action: Action): State => {
       ].indexOf(action.value)
 
       if (index >= 0) {
-        annotationsMatrix[action.position.y][action.position.x] = [
-          ...annotationsMatrix[action.position.y][action.position.x].slice(
-            0,
-            index,
-          ),
-          ...annotationsMatrix[action.position.y][action.position.x].slice(
-            index + 1,
-          ),
-        ]
+        annotationsMatrix[action.position.y][action.position.x] =
+          annotationsMatrix[action.position.y][action.position.x].filter(
+            (value) => value !== action.value,
+          )
       } else {
         annotationsMatrix[action.position.y][action.position.x] = [
           ...annotationsMatrix[action.position.y][action.position.x],
