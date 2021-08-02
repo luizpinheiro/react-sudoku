@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 
 import { gray } from '../../styles/colors'
-
-const CELL_SIZE = 45
+import { CELL_SIZE } from '../../config'
 
 export const MainContainer = styled.div`
   margin-top: 10px;

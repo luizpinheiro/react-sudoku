@@ -139,22 +139,22 @@ export const clearCells = (
   clearSize = 16,
 ): NumbersMatrix => {
   let clearedPositions = 0
-  const resultMatrix = generateMatrix<number | null>(null)
-  // make a copy of the matrix
-  for (let y = 0; y < 9; y += 1) {
-    for (let x = 0; x < 9; x += 1) {
-      resultMatrix[y][x] = matrix[y][x]
-    }
-  }
-  // clear the values of some cells
+  const resultMatrix = cloneMatrix<number | null>(matrix)
+  console.log(`Clear size: ${clearSize}`)
   do {
     const position = { x: randomNumber(0, 8), y: randomNumber(0, 8) }
-    if (resultMatrix[position.y][position.x]) {
+    if (resultMatrix[position.y][position.x] !== null) {
       resultMatrix[position.y][position.x] = null
+      clearedPositions += 1
+    }
+    if (
+      clearedPositions < clearSize &&
+      resultMatrix[8 - position.y][8 - position.x] !== null
+    ) {
       resultMatrix[8 - position.y][8 - position.x] = null
       clearedPositions += 1
     }
-  } while (clearedPositions < clearSize / 2)
+  } while (clearedPositions < clearSize)
   return resultMatrix
 }
 

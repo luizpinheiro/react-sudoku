@@ -30,11 +30,15 @@ type State = {
 
 const generateInitialState = (): State => {
   const completeResultMatrix = generateprefilledCells()
+  const prefilledMatrix = clearCells(
+    completeResultMatrix,
+    Configs.MAX_EMPTY_CELLS,
+  )
   return {
     gameStatus: GameStatus.IDLE,
     seconds: 0,
     resultMatrix: completeResultMatrix,
-    prefilledMatrix: clearCells(completeResultMatrix, Configs.EMPTY_CELLS),
+    prefilledMatrix,
     fillMatrix: generateMatrix<number | null>(null),
     selectedPosition: null,
     mistakesCounter: 0,
@@ -140,7 +144,8 @@ const reducerFunction = (state: State, action: Action): State => {
         action.value
 
       const mistake = errorsMatrix[action.position.y][action.position.x]
-      const win = !mistake && state.filledPositions + 1 === Configs.EMPTY_CELLS
+      const win =
+        !mistake && state.filledPositions + 1 === Configs.MAX_EMPTY_CELLS
 
       let gameStatus = win ? GameStatus.WIN : GameStatus.ONGOING
       if (mistake && state.mistakesCounter + 1 === Configs.MISTAKES_ALLOWED)
