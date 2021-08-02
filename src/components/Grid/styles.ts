@@ -59,7 +59,7 @@ export const Cell = styled.div<{
 
 export const Annotation = styled.div`
   font-size: 10px;
-  width: 14px;
+  width: ${Math.floor(CELL_SIZE / 3) - 2}px;
   height: 13px;
   text-align: center;
   line-height: 13px;
