@@ -141,7 +141,7 @@ export const generatePreFilledCells = (): NumbersMatrix => {
 }
 
 /**
- * Recursive algorithm that generates a valid solution for sudoku game.
+ * Recursive (backtracking) algorithm that generates a valid solution for sudoku game.
  * It starts by filling a position and checking if we can proceed to a final
  * solution. If not, abort the branch and try a new value.
  *
