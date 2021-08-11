@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 
 import * as S from './styles'
 import { Coordinate, NumbersMatrix } from '../../types'
+import { sameBlockCoordinates } from '../../utils/miscellaneous'
 // import {
 //   sameBlockCoordinates,
 //   sameColumnCoordinates,
@@ -35,22 +36,18 @@ const Keyboard = ({
     setAnnotationMode((m) => !m)
   }
 
-  // const disabledKeys = useMemo<Record<number, boolean>>(() => {
-  //   const result: Record<number, boolean> = {}
-  //   if (selectedPosition) {
-  //     ;[
-  //       ...sameLineCoordinates(selectedPosition),
-  //       ...sameColumnCoordinates(selectedPosition),
-  //       ...sameBlockCoordinates(selectedPosition),
-  //     ].forEach((coordinate) => {
-  //       if (filledCells[coordinate.y][coordinate.x] !== null)
-  //         result[filledCells[coordinate.y][coordinate.x] as number] = true
-  //       else if (prefilledCells[coordinate.y][coordinate.x] !== null)
-  //         result[prefilledCells[coordinate.y][coordinate.x] as number] = true
-  //     })
-  //   }
-  //   return result
-  // }, [selectedPosition, filledCells, prefilledCells])
+  const disabledKeys = useMemo<Record<number, boolean>>(() => {
+    const result: Record<number, boolean> = {}
+    if (selectedPosition) {
+      sameBlockCoordinates(selectedPosition).forEach((coordinate) => {
+        if (filledCells[coordinate.y][coordinate.x] !== null)
+          result[filledCells[coordinate.y][coordinate.x] as number] = true
+        else if (prefilledCells[coordinate.y][coordinate.x] !== null)
+          result[prefilledCells[coordinate.y][coordinate.x] as number] = true
+      })
+    }
+    return result
+  }, [selectedPosition, filledCells, prefilledCells])
 
   const handleClick = (position: Coordinate, value: number) => {
     if (annotationMode) {
@@ -82,7 +79,9 @@ const Keyboard = ({
           <S.Cell
             key={value}
             disabled={
-              selectedPosition === null || !!prefilledCells[selectedPosition.y][selectedPosition.x]
+              selectedPosition === null ||
+              !!prefilledCells[selectedPosition.y][selectedPosition.x] ||
+              disabledKeys[value]
             }
             annotation={annotationMode}
             onClick={() =>
