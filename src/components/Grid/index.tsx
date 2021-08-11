@@ -3,11 +3,11 @@ import React, { useMemo } from 'react'
 import * as S from './styles'
 import { AnnotationsMatrix, Coordinate, ErrorsMatrix, NumbersMatrix } from '../../types'
 import {
-  generateMatrix,
   sameBlockCoordinates,
   sameColumnCoordinates,
   sameLineCoordinates,
 } from '../../utils/miscellaneous'
+import { createMatrix } from '../../utils/matrix'
 
 type Props = {
   selectedCell: Coordinate | null
@@ -27,7 +27,7 @@ const Grid = ({
   annotationsMatrix,
 }: Props) => {
   const highlightedCells: boolean[][] = useMemo(() => {
-    const cells = generateMatrix<boolean>(false)
+    const cells = createMatrix<boolean>(9, false)
     if (!selectedCell) return cells
 
     sameBlockCoordinates(selectedCell).forEach((coordinate) => {

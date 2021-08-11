@@ -12,11 +12,10 @@ import {
   clearCells,
   clearColumnAnnotations,
   clearLineAnnotations,
-  cloneMatrix,
-  generateMatrix,
   generatePreFilledCells,
 } from '../../utils/miscellaneous'
 import * as Configs from '../../config'
+import { cloneMatrix, createMatrix } from '../../utils/matrix'
 
 type State = {
   gameStatus: GameStatus
@@ -43,12 +42,12 @@ const generateInitialState = (): State => {
     seconds: 0,
     resultMatrix: completeResultMatrix,
     prefilledMatrix,
-    fillMatrix: generateMatrix<number | null>(null),
+    fillMatrix: createMatrix<number | null>(9, null),
     selectedPosition: null,
     mistakesCounter: 0,
-    errorsMatrix: generateMatrix<boolean>(false),
+    errorsMatrix: createMatrix<boolean>(9, false),
     filledPositions: 0,
-    annotationsMatrix: generateMatrix<number[]>([]),
+    annotationsMatrix: createMatrix<number[]>(9, []),
   }
 }
 

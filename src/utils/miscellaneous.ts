@@ -1,5 +1,6 @@
 import { AnnotationsMatrix, Coordinate, NumbersMatrix } from '../types'
 import { randomNumber } from './random'
+import { cloneMatrix, createMatrix } from './matrix'
 
 /**
  * Converts a coordinate object into it's plain representation.
@@ -8,24 +9,6 @@ import { randomNumber } from './random'
  * @param position
  */
 export const plainCoordinate = (position: Coordinate): string => `${position.x},${position.y}`
-
-/**
- * Creates a new 9x9 matrix where the elements have the type T
- * and initializes its values with the value provided to the
- * parameter initialValue.
- *
- * @param initialValue
- */
-export const generateMatrix = <T>(initialValue: T): T[][] => {
-  const matrix: T[][] = []
-  for (let y = 0; y < 9; y += 1) {
-    if (!matrix[y]) matrix[y] = []
-    for (let x = 0; x < 9; x += 1) {
-      matrix[y][x] = initialValue
-    }
-  }
-  return matrix
-}
 
 /**
  * Returns all coordinates that belongs to the same block (sudoku has 9 blocks)
@@ -130,7 +113,7 @@ export const validateCoordinateNumber = (
  * can create a new game from this pre-filled matrix by just hiding some cells.
  */
 export const generatePreFilledCells = (): NumbersMatrix => {
-  const matrix = generateMatrix<number | null>(null)
+  const matrix = createMatrix<number | null>(9, null)
   const initialCoordinate: Coordinate = { x: 0, y: 0 }
   fillSequence(initialCoordinate, matrix)
   return matrix
@@ -211,21 +194,6 @@ export const clearCells = (matrix: NumbersMatrix, clearSize = 16): NumbersMatrix
       clearedPositions += 1
     }
   } while (clearedPositions < clearSize)
-  return resultMatrix
-}
-
-/**
- * Clones a given matrix. Necessary when updating react states.
- * @param matrix
- */
-export const cloneMatrix = <T>(matrix: T[][]): T[][] => {
-  const resultMatrix: T[][] = []
-  for (let y = 0; y < 9; y += 1) {
-    if (!resultMatrix[y]) resultMatrix[y] = []
-    for (let x = 0; x < 9; x += 1) {
-      resultMatrix[y][x] = matrix[y][x]
-    }
-  }
   return resultMatrix
 }
 
