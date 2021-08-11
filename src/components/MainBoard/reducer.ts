@@ -8,7 +8,10 @@ import {
   NumbersMatrix,
 } from '../../types'
 import {
+  clearBlockAnnotations,
   clearCells,
+  clearColumnAnnotations,
+  clearLineAnnotations,
   cloneMatrix,
   generateMatrix,
   generatePreFilledCells,
@@ -34,10 +37,7 @@ type State = {
  */
 const generateInitialState = (): State => {
   const completeResultMatrix = generatePreFilledCells()
-  const prefilledMatrix = clearCells(
-    completeResultMatrix,
-    Configs.MAX_EMPTY_CELLS,
-  )
+  const prefilledMatrix = clearCells(completeResultMatrix, Configs.MAX_EMPTY_CELLS)
   return {
     gameStatus: GameStatus.IDLE,
     seconds: 0,
@@ -72,18 +72,14 @@ const reducerFunction = (state: State, action: Action): State => {
     case Actions.ANNOTATE: {
       if (!action.position) return state
       if (!action.value) return state
-      if (state.fillMatrix[action.position.y][action.position.x] !== null)
-        return state
+      if (state.fillMatrix[action.position.y][action.position.x] !== null) return state
       const annotationsMatrix = cloneMatrix<number[]>(state.annotationsMatrix)
-      const index = annotationsMatrix[action.position.y][
-        action.position.x
-      ].indexOf(action.value)
+      const index = annotationsMatrix[action.position.y][action.position.x].indexOf(action.value)
 
       if (index >= 0) {
-        annotationsMatrix[action.position.y][action.position.x] =
-          annotationsMatrix[action.position.y][action.position.x].filter(
-            (value) => value !== action.value,
-          )
+        annotationsMatrix[action.position.y][action.position.x] = annotationsMatrix[
+          action.position.y
+        ][action.position.x].filter((value) => value !== action.value)
       } else {
         annotationsMatrix[action.position.y][action.position.x] = [
           ...annotationsMatrix[action.position.y][action.position.x],
@@ -97,10 +93,8 @@ const reducerFunction = (state: State, action: Action): State => {
     }
     case Actions.ERASE: {
       if (!action.position) return state
-      if (state.prefilledMatrix[action.position.y][action.position.x] !== null)
-        return state
-      if (state.fillMatrix[action.position.y][action.position.x] === null)
-        return state
+      if (state.prefilledMatrix[action.position.y][action.position.x] !== null) return state
+      if (state.fillMatrix[action.position.y][action.position.x] === null) return state
 
       const fillMatrix = cloneMatrix<number | null>(state.fillMatrix)
       const errorsMatrix = cloneMatrix<boolean>(state.errorsMatrix)
@@ -112,9 +106,7 @@ const reducerFunction = (state: State, action: Action): State => {
         ...state,
         fillMatrix,
         errorsMatrix,
-        filledPositions: state.errorsMatrix[action.position.y][
-          action.position.x
-        ]
+        filledPositions: state.errorsMatrix[action.position.y][action.position.x]
           ? state.filledPositions
           : state.filledPositions - 1,
       }
@@ -122,14 +114,10 @@ const reducerFunction = (state: State, action: Action): State => {
     case Actions.INPUT: {
       if (!action.position) return state
       if (!action.value) return state
-      if (
-        state.prefilledMatrix[action.position.y][action.position.x] !== null
-      ) {
+      if (state.prefilledMatrix[action.position.y][action.position.x]) {
         return state
       }
-      if (
-        state.fillMatrix[action.position.y][action.position.x] === action.value
-      ) {
+      if (state.fillMatrix[action.position.y][action.position.x] === action.value) {
         return state
       }
 
@@ -139,32 +127,31 @@ const reducerFunction = (state: State, action: Action): State => {
 
       fillMatrix[action.position.y][action.position.x] = action.value
       errorsMatrix[action.position.y][action.position.x] =
-        state.resultMatrix[action.position.y][action.position.x] !==
-        action.value
+        state.resultMatrix[action.position.y][action.position.x] !== action.value
 
       const mistake = errorsMatrix[action.position.y][action.position.x]
-      const win =
-        !mistake && state.filledPositions + 1 === Configs.MAX_EMPTY_CELLS
+      const win = !mistake && state.filledPositions + 1 === Configs.MAX_EMPTY_CELLS
 
+      // Check if we need to make any game status change
       let gameStatus = win ? GameStatus.WIN : GameStatus.ONGOING
       if (mistake && state.mistakesCounter + 1 === Configs.MISTAKES_ALLOWED)
         gameStatus = GameStatus.LOST
 
-      if (annotationsMatrix[action.position.y][action.position.x].length) {
-        annotationsMatrix[action.position.y][action.position.x] = []
-      }
+      // Clear any annotations in the filled position
+      annotationsMatrix[action.position.y][action.position.x] = []
+
+      // Remove the annotations that holds the same value on the same line, column and block
+      clearLineAnnotations(action.value, action.position, annotationsMatrix)
+      clearColumnAnnotations(action.value, action.position, annotationsMatrix)
+      clearBlockAnnotations(action.value, action.position, annotationsMatrix)
 
       return {
         ...state,
         fillMatrix,
         errorsMatrix,
-        mistakesCounter: mistake
-          ? state.mistakesCounter + 1
-          : state.mistakesCounter,
+        mistakesCounter: mistake ? state.mistakesCounter + 1 : state.mistakesCounter,
         gameStatus,
-        filledPositions: mistake
-          ? state.filledPositions
-          : state.filledPositions + 1,
+        filledPositions: mistake ? state.filledPositions : state.filledPositions + 1,
         annotationsMatrix,
       }
     }

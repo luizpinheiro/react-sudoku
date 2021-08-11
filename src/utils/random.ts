@@ -3,8 +3,7 @@
  * @param length
  */
 export const randomStr = (length: number): string => {
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   let result = ''
   const charactersLength = characters.length
   for (let i = 0; i < length; i += 1) {

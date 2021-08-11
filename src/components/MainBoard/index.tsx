@@ -64,10 +64,7 @@ const MainBoard = () => {
     <S.MainContainer>
       <Header />
       <S.GameStats>
-        <MistakesCounter
-          mistakes={state.mistakesCounter}
-          maximumMistakes={MISTAKES_ALLOWED}
-        />
+        <MistakesCounter mistakes={state.mistakesCounter} maximumMistakes={MISTAKES_ALLOWED} />
         <Clock
           gameStatus={state.gameStatus}
           seconds={state.seconds}

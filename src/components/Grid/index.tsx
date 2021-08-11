@@ -1,12 +1,7 @@
 import React, { useMemo } from 'react'
 
 import * as S from './styles'
-import {
-  AnnotationsMatrix,
-  Coordinate,
-  ErrorsMatrix,
-  NumbersMatrix,
-} from '../../types'
+import { AnnotationsMatrix, Coordinate, ErrorsMatrix, NumbersMatrix } from '../../types'
 import {
   generateMatrix,
   sameBlockCoordinates,
@@ -55,11 +50,7 @@ const Grid = ({
           <S.Cell
             key={`${x},${y}`}
             onClick={() => onSelect({ x, y })}
-            selected={
-              selectedCell !== null &&
-              selectedCell.x === x &&
-              selectedCell.y === y
-            }
+            selected={selectedCell !== null && selectedCell.x === x && selectedCell.y === y}
             initialValue={!!initialCellValues[y][x]}
             highlighted={highlightedCells[y][x]}
             error={errorsMatrix[y][x]}

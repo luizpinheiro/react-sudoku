@@ -1,4 +1,4 @@
-import { Coordinate, NumbersMatrix } from '../types'
+import { AnnotationsMatrix, Coordinate, NumbersMatrix } from '../types'
 import { randomNumber } from './random'
 
 /**
@@ -7,8 +7,7 @@ import { randomNumber } from './random'
  *
  * @param position
  */
-export const plainCoordinate = (position: Coordinate): string =>
-  `${position.x},${position.y}`
+export const plainCoordinate = (position: Coordinate): string => `${position.x},${position.y}`
 
 /**
  * Creates a new 9x9 matrix where the elements have the type T
@@ -101,8 +100,7 @@ export const validateCoordinateNumber = (
   const lineCoordinates = sameLineCoordinates(coordinate)
   if (
     lineCoordinates.some(
-      (blockCoordinate) =>
-        matrix[blockCoordinate.y][blockCoordinate.x] === value,
+      (blockCoordinate) => matrix[blockCoordinate.y][blockCoordinate.x] === value,
     )
   )
     return false
@@ -110,8 +108,7 @@ export const validateCoordinateNumber = (
   const columnCoordinates = sameColumnCoordinates(coordinate)
   if (
     columnCoordinates.some(
-      (blockCoordinate) =>
-        matrix[blockCoordinate.y][blockCoordinate.x] === value,
+      (blockCoordinate) => matrix[blockCoordinate.y][blockCoordinate.x] === value,
     )
   )
     return false
@@ -119,8 +116,7 @@ export const validateCoordinateNumber = (
   const blockCoordinates = sameBlockCoordinates(coordinate)
   if (
     blockCoordinates.some(
-      (blockCoordinate) =>
-        matrix[blockCoordinate.y][blockCoordinate.x] === value,
+      (blockCoordinate) => matrix[blockCoordinate.y][blockCoordinate.x] === value,
     )
   )
     return false
@@ -148,10 +144,7 @@ export const generatePreFilledCells = (): NumbersMatrix => {
  * @param coordinate
  * @param matrix
  */
-const fillSequence = (
-  coordinate: Coordinate,
-  matrix: NumbersMatrix,
-): boolean => {
+const fillSequence = (coordinate: Coordinate, matrix: NumbersMatrix): boolean => {
   const nextCoordinate = getNextCoordinate(coordinate)
   const randomSequence = generateRandomSequence()
   for (let i = 0; i < 9; i += 1) {
@@ -203,10 +196,7 @@ const generateRandomSequence = (): number[] => {
  * @param matrix
  * @param clearSize
  */
-export const clearCells = (
-  matrix: NumbersMatrix,
-  clearSize = 16,
-): NumbersMatrix => {
+export const clearCells = (matrix: NumbersMatrix, clearSize = 16): NumbersMatrix => {
   let clearedPositions = 0
   const resultMatrix = cloneMatrix<number | null>(matrix)
   console.log(`Clear size: ${clearSize}`)
@@ -216,10 +206,7 @@ export const clearCells = (
       resultMatrix[position.y][position.x] = null
       clearedPositions += 1
     }
-    if (
-      clearedPositions < clearSize &&
-      resultMatrix[8 - position.y][8 - position.x] !== null
-    ) {
+    if (clearedPositions < clearSize && resultMatrix[8 - position.y][8 - position.x] !== null) {
       resultMatrix[8 - position.y][8 - position.x] = null
       clearedPositions += 1
     }
@@ -252,4 +239,43 @@ export const secondsToClock = (seconds: number): string => {
     .padStart(2, '0')
   const sec = (seconds % 60).toString().padStart(2, '0')
   return `${min}:${sec}`
+}
+
+export const clearLineAnnotations = (
+  value: number,
+  position: Coordinate,
+  annotationsMatrix: AnnotationsMatrix,
+): void => {
+  sameLineCoordinates(position).forEach((coordinate) => {
+    const index = annotationsMatrix[coordinate.y][coordinate.x].indexOf(value)
+    if (index >= 0) {
+      annotationsMatrix[coordinate.y][coordinate.x].splice(index, 1)
+    }
+  })
+}
+
+export const clearColumnAnnotations = (
+  value: number,
+  position: Coordinate,
+  annotationsMatrix: AnnotationsMatrix,
+): void => {
+  sameColumnCoordinates(position).forEach((coordinate) => {
+    const index = annotationsMatrix[coordinate.y][coordinate.x].indexOf(value)
+    if (index >= 0) {
+      annotationsMatrix[coordinate.y][coordinate.x].splice(index, 1)
+    }
+  })
+}
+
+export const clearBlockAnnotations = (
+  value: number,
+  position: Coordinate,
+  annotationsMatrix: AnnotationsMatrix,
+): void => {
+  sameBlockCoordinates(position).forEach((coordinate) => {
+    const index = annotationsMatrix[coordinate.y][coordinate.x].indexOf(value)
+    if (index >= 0) {
+      annotationsMatrix[coordinate.y][coordinate.x].splice(index, 1)
+    }
+  })
 }

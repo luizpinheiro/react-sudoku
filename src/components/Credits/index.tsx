@@ -15,21 +15,11 @@ const Credits = () => (
         Good Ware
       </a>
       {' and '}
-      <a
-        href="https://www.freepik.com"
-        title="Freepik"
-        target="_blank"
-        rel="noreferrer"
-      >
+      <a href="https://www.freepik.com" title="Freepik" target="_blank" rel="noreferrer">
         Freepik
       </a>
       {' from '}
-      <a
-        href="https://www.flaticon.com/"
-        title="Flaticon"
-        target="_blank"
-        rel="noreferrer"
-      >
+      <a href="https://www.flaticon.com/" title="Flaticon" target="_blank" rel="noreferrer">
         www.flaticon.com
       </a>
     </div>

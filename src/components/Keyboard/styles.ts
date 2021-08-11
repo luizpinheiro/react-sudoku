@@ -19,8 +19,7 @@ export const Button = styled.button<{ annotationMode: boolean }>`
   border-radius: 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  ${(props) =>
-    props.annotationMode && `color: blue; border-color: rgba(0,0,255,.3);`}
+  ${(props) => props.annotationMode && `color: blue; border-color: rgba(0,0,255,.3);`}
 
   &:hover {
     background: #efefef;

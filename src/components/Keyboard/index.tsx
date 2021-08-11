@@ -62,10 +62,7 @@ const Keyboard = ({
   return (
     <S.MainContainer>
       <S.ButtonsContainer>
-        <S.Button
-          onClick={toggleAnnotationMode}
-          annotationMode={annotationMode}
-        >
+        <S.Button onClick={toggleAnnotationMode} annotationMode={annotationMode}>
           Annotation
         </S.Button>
         <S.Button
@@ -85,8 +82,7 @@ const Keyboard = ({
           <S.Cell
             key={value}
             disabled={
-              selectedPosition === null ||
-              !!prefilledCells[selectedPosition.y][selectedPosition.x]
+              selectedPosition === null || !!prefilledCells[selectedPosition.y][selectedPosition.x]
             }
             annotation={annotationMode}
             onClick={() =>

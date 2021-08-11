@@ -12,8 +12,7 @@ type Props = {
   seconds: number
 }
 const EndGameOverlay = ({ gameStatus, onPlayAgain, seconds }: Props) => {
-  if (gameStatus !== GameStatus.WIN && gameStatus !== GameStatus.LOST)
-    return null
+  if (gameStatus !== GameStatus.WIN && gameStatus !== GameStatus.LOST) return null
 
   const image = gameStatus === GameStatus.WIN ? winImage : lostImage
   return (
